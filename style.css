@@ -1,0 +1,120 @@
+:root {
+  /* Brand palette (WGMC updated) */
+  /* Azure (Primary) */
+  --azure-primary: #319FCA;   /* #319FCA */
+  --azure-secondary: #267594; /* #267594 */
+  /* Turquoise */
+  --turquoise-primary: #6BBEAB; /* #6BBEAB */
+  --turquoise-secondary: #02A689; /* #02A689 */
+  /* Gray accent */
+  --accent-gray: #737373; /* #737373 */
+
+  /* Mapped brand tokens used by the site */
+  --brand-primary: var(--azure-primary);
+  --brand-secondary: var(--turquoise-secondary);
+  --brand-primary-dark: var(--azure-secondary);
+  --brand-secondary-dark: #02806e; /* darker turquoise for hover/gradient */
+  --brand-black: #000000;
+  --brand-white: #FFFFFF;
+  --text-color: #1A1A1A;
+  --muted-bg: #F5F8F9;
+  --radius: 16px;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* RGB for transparent overlays/washes */
+  --brand-primary-rgb: 49, 159, 202;   /* #319FCA */
+  --brand-secondary-rgb: 2, 166, 137;  /* #02A689 */
+}
+
+/* Typography */
+html { font-size: 18px; }
+body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+
+/* Accessibility */
+* { -webkit-tap-highlight-color: transparent; }
+*:focus-visible {
+  outline: 3px solid var(--brand-secondary);
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling for in-page links */
+html { scroll-behavior: smooth; }
+
+/* Utility override for images */
+img { max-width: 100%; height: auto; }
+
+/* Brandful backgrounds and accents */
+.bg-brand-wash {
+  background: linear-gradient(
+    180deg,
+    rgba(var(--brand-secondary-rgb), 0.10),
+    rgba(var(--brand-primary-rgb), 0.08)
+  );
+}
+
+.card-accent {
+  background-image: linear-gradient(180deg, #fff, rgba(var(--brand-secondary-rgb), 0.05));
+}
+
+.brand-divider {
+  height: 4px;
+  width: 100%;
+  background-image: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+  border-radius: 999px;
+}
+
+.heading-accent {
+  position: relative;
+}
+.heading-accent::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 56px;
+  height: 4px;
+  background-image: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+  border-radius: 999px;
+}
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .75rem 1.25rem; border-radius: var(--radius); font-weight: 600; line-height: 1; transition: transform .15s ease, box-shadow .15s ease, background-color .2s ease, color .2s ease, border-color .2s ease; text-decoration: none; cursor: pointer; }
+.btn:focus-visible { outline: 2px solid var(--brand-secondary); outline-offset: 2px; }
+.btn:active { transform: translateY(0); }
+
+.btn-primary { color: #fff; background: linear-gradient(180deg, var(--brand-primary), var(--brand-primary-dark)); box-shadow: 0 6px 20px rgba(0,122,140,.25); border: 1px solid transparent; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(0,122,140,.32); }
+
+.btn-secondary { color: #0b3a40; background: linear-gradient(180deg, var(--brand-secondary), var(--brand-secondary-dark)); box-shadow: 0 6px 20px rgba(114,177,170,.25); border: 1px solid transparent; }
+.btn-secondary:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(114,177,170,.32); }
+
+.btn-outline { color: var(--brand-primary); background: #fff; border: 2px solid var(--brand-primary); }
+.btn-outline:hover { background: rgba(0,122,140,.08); }
+
+.btn-neutral { color: #334155; background: #fff; border: 1px solid #e2e8f0; }
+.btn-neutral:hover { background: #f8fafc; }
+
+.btn-light { color: var(--brand-primary); background: #fff; border: 1px solid #e2e8f0; }
+.btn-light:hover { box-shadow: 0 8px 22px rgba(0,0,0,.12); transform: translateY(-1px); }
+
+@keyframes pulse-soft { 0%, 100% { transform: translateY(0); box-shadow: 0 6px 20px rgba(0,122,140,.25);} 50% { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(0,122,140,.35);} }
+.pulse { animation: pulse-soft 2.2s ease-in-out infinite; }
+
+/* Subtle card hover for interactivity */
+.hover\:-translate-y-0\.5:hover { transform: translateY(-2px); }
+.hover\:-translate-y-1:hover { transform: translateY(-4px); }
+
+/* Ensure transitions are smooth on elements using translate */
+.transition { transition: all .2s ease; }
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--brand-primary);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+.skip-link:focus { left: 8px; top: 8px; z-index: 1000; }
