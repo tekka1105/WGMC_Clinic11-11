@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WGMC — Housing, Healthcare, and Hope (HHH)</title>
+    <meta name="theme-color" content="#319FCA" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
+    <script>
+      tailwind = window.tailwind || {};
+      tailwind.config = { theme: { extend: { colors: { brand: { primary: 'var(--brand-primary)', secondary: 'var(--brand-secondary)', black: 'var(--brand-black)', white: 'var(--brand-white)' }, text: 'var(--text-color)', muted: 'var(--muted-bg)' }, borderRadius: { brand: 'var(--radius)' }, boxShadow: { card: 'var(--shadow)' } } } };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .hero { background-image: linear-gradient(135deg, #ffffffcc, rgba(var(--brand-secondary-rgb), 0.33)), url('images/WGMC-In-Community.png'); background-size: cover; background-position: center; }
+    </style>
+  </head>
+  <body class="bg-white text-text font-sans">
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <a data-index-link="#home" href="index.html" class="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 ring-brand-secondary rounded-md">
+          <img src="images/WGMC-Logo-Alternate-1-website.jpg" alt="WGMC logo" class="h-8 w-auto" />
+          <span class="font-semibold text-brand-primary">WGMC</span>
+        </a>
+        <nav class="hidden sm:flex items-center gap-4 text-sm font-semibold">
+          <a data-index-link="#programs" class="hover:text-brand-primary" href="index.html#programs" data-i18n="navPrograms">Programs</a>
+          <a data-index-link="#locations" class="hover:text-brand-primary" href="index.html#locations" data-i18n="navLocations">Locations</a>
+        </nav>
+        <div class="flex items-center gap-2">
+          <button id="langToggle" class="btn btn-outline rounded-full" aria-label="Toggle language">ES</button>
+          <a href="tel:+18157263377" class="btn btn-primary" data-i18n="ctaCall"><span>📞</span> Call (815) 726-3377</a>
+        </div>
+      </div>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+          <h1 class="text-3xl sm:text-4xl font-bold text-brand-primary" data-i18n="heroTitle">Housing, Healthcare, and Hope (HHH)</h1>
+          <p class="mt-3 text-lg text-slate-700 max-w-2xl" data-i18n="heroDesc">A demonstration program that bridges healthcare and housing for people experiencing homelessness or housing insecurity.</p>
+          <div class="mt-6 flex gap-3">
+            <a href="tel:+18157263377" class="btn btn-primary" data-i18n="callHelp">Call for Help</a>
+            <a href="https://willgrundymedicalclinic.org/housing-healthcare-and-hope/" target="_blank" rel="noreferrer" class="btn btn-outline" data-i18n="readMore">Read more at WGMC</a>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <img src="images/56BF34F3-FE6F-4A91-9D9A-95FD834DE187_1_201_a-1024x692.jpeg" alt="Supportive services" loading="lazy" class="rounded-brand h-36 w-full object-cover shadow-card border border-slate-100" />
+            <img src="images/WGMC-In-Community.png" alt="Community partnership" loading="lazy" class="rounded-brand h-36 w-full object-cover shadow-card border border-slate-100" />
+            <img src="images/9D7366CA-9E18-4867-B3B8-4C4EB12CBFE8_1_201_a-1024x683.jpeg" alt="Client care coordination" loading="lazy" class="rounded-brand h-36 w-full object-cover shadow-card border border-slate-100 hidden md:block" />
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 grid md:grid-cols-3 gap-6">
+          <div class="md:col-span-2 bg-white rounded-brand shadow-card p-6 border border-slate-100">
+            <h2 class="text-xl font-semibold text-brand-primary heading-accent">Overview</h2>
+            <p class="mt-3 text-slate-700">HHH provides case management, care coordination, tenant-based rental assistance, medical respite, shelter referrals, and outreach. By addressing social determinants of health, the program helps participants stabilize housing and improve their health.</p>
+          </div>
+          <aside class="bg-muted rounded-brand p-6">
+            <h3 class="font-semibold">Get Started</h3>
+            <ul class="mt-3 space-y-2 text-sm text-slate-700">
+              <li>Check eligibility on the home page</li>
+              <li>Bring any ID and medications if available</li>
+              <li>Call to speak with our team</li>
+            </ul>
+            <a data-index-link="#get-care" href="index.html#get-care" class="mt-4 inline-flex btn btn-light" data-i18n="howGetCare">How to Get Care</a>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Program highlights from Medical Respite materials -->
+      <section id="highlights" class="bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 grid md:grid-cols-2 gap-6">
+          <div class="bg-white rounded-brand shadow-card p-6 border border-slate-100">
+            <h2 class="text-xl font-semibold text-brand-primary heading-accent">What Sets Us Apart</h2>
+            <ul class="mt-4 list-disc pl-5 space-y-2 text-slate-700">
+              <li><strong>24/7</strong> care and support</li>
+              <li>Coordination of <strong>free transportation</strong></li>
+              <li><strong>Three daily meals</strong> with personalized plans</li>
+              <li>Independent living suites with <strong>kitchenettes</strong></li>
+              <li>Special accommodations for <strong>single moms and couples</strong></li>
+              <li>Onsite <strong>pharmacy</strong> and general <strong>healthcare</strong> services as needed</li>
+              <li>Average transitional placements of <strong>90 days</strong></li>
+            </ul>
+            <div class="mt-6 text-sm text-slate-600">
+              Our coordinated care model streamlines services, improves outcomes, and eases transitions between providers.
+            </div>
+          </div>
+          <div class="bg-white rounded-brand shadow-card p-6 border border-slate-100">
+            <h2 class="text-xl font-semibold text-brand-primary heading-accent">Clinic & Pharmacy Hours</h2>
+            <div class="mt-4 grid sm:grid-cols-2 gap-6 text-slate-700">
+              <div>
+                <h3 class="font-semibold">Clinic Hours</h3>
+                <ul class="mt-2 space-y-1 text-sm">
+                  <li>Monday: 8:30 a.m. – 5:00 p.m.</li>
+                  <li>Tuesday: 8:30 a.m. – 5:00 p.m.</li>
+                  <li>Wednesday: 8:30 a.m. – 8:00 p.m.</li>
+                  <li>Thursday: 8:30 a.m. – 5:00 p.m.</li>
+                  <li>Friday: 8:30 a.m. – 5:00 p.m.</li>
+                  <li>Saturday: 9:00 a.m. – 2:00 p.m.</li>
+                </ul>
+                <div class="mt-2 text-xs text-slate-600">Two Saturdays a month — please call for availability.</div>
+              </div>
+              <div>
+                <h3 class="font-semibold">Pharmacy Hours</h3>
+                <ul class="mt-2 space-y-1 text-sm">
+                  <li>Tuesday: 10:00 a.m. – 12:00 p.m.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Respite process from materials -->
+      <section id="process" class="bg-brand-wash wave-top">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+          <h2 class="text-2xl font-bold text-brand-primary heading-accent">Medical Respite Process</h2>
+          <div class="mt-2 text-sm font-semibold text-brand-primary">Referral Hours: 7:00 a.m. – 3:00 p.m. (Mon–Fri)</div>
+          <div class="mt-6 grid md:grid-cols-2 gap-6">
+            <div class="bg-white rounded-brand shadow-card p-6 border border-slate-100">
+              <h3 class="font-semibold">1) Referral Initiation</h3>
+              <ul class="mt-2 list-disc pl-5 text-sm text-slate-700 space-y-1">
+                <li>Email: <a href="mailto:respite@wgmedclinic.org" class="text-brand-primary hover:underline">respite@wgmedclinic.org</a></li>
+                <li>Call: <a href="tel:+18156418902" class="text-brand-primary hover:underline">(815) 641-8902</a></li>
+              </ul>
+              <h3 class="mt-4 font-semibold">2) Respite Site Coordination</h3>
+              <ul class="mt-2 list-disc pl-5 text-sm text-slate-700 space-y-1">
+                <li>Confirm room availability with the respite hotel site</li>
+                <li>Arrange the patient’s room assignment</li>
+              </ul>
+            </div>
+            <div class="bg-white rounded-brand shadow-card p-6 border border-slate-100">
+              <h3 class="font-semibold">3) Staff Dispatch</h3>
+              <ul class="mt-2 list-disc pl-5 text-sm text-slate-700 space-y-1">
+                <li>Hospital visit to meet with the patient</li>
+                <li>Assess appropriateness for respite care (established criteria)</li>
+              </ul>
+              <h3 class="mt-4 font-semibold">4) Assessment for Appropriateness</h3>
+              <ul class="mt-2 list-disc pl-5 text-sm text-slate-700 space-y-1">
+                <li>Enter patient into EMR</li>
+                <li>Secure and manage medications</li>
+                <li>Create a personalized 7‑day meal plan</li>
+                <li>Arrange medical transport to the respite site</li>
+                <li>Develop a post‑respite housing plan</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Eligibility and limitations -->
+      <section id="eligibility" class="bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 grid md:grid-cols-2 gap-6">
+          <div class="bg-white rounded-brand shadow-card p-6 border border-slate-100">
+            <h2 class="text-xl font-semibold text-brand-primary heading-accent">Who Is Eligible?</h2>
+            <ul class="mt-4 list-disc pl-5 space-y-2 text-slate-700 text-sm">
+              <li>Age 18+ with an acute, treatable medical condition</li>
+              <li>Medically stable (no inpatient care or active withdrawal needed)</li>
+              <li>Safe (no risk of harm to self or others)</li>
+              <li>Independent (can self‑administer medications with a 30‑day supply)</li>
+              <li>Consenting (agrees to treatment, rules, and case management)</li>
+              <li>Psychiatric conditions must be medically managed</li>
+            </ul>
+          </div>
+          <div class="bg-white rounded-brand shadow-card p-6 border border-slate-100">
+            <h2 class="text-xl font-semibold text-brand-primary heading-accent">Limitations</h2>
+            <ul class="mt-4 list-disc pl-5 space-y-2 text-slate-700 text-sm">
+              <li>Active homicidal or suicidal ideations</li>
+              <li>Primary diagnosis of behavioral or mental health conditions</li>
+              <li>History of excessive violence or threats</li>
+              <li>Seclusion or restraints within 48 hours of discharge</li>
+              <li>Incontinence of urine or feces</li>
+              <li>Need for specialized medical services (e.g., dialysis, tube feeding, PICC lines)</li>
+              <li>Cannot complete Activities of Daily Living (ADLs) independently</li>
+              <li>Require PRN (as‑needed) medications</li>
+              <li>Infectious or contagious diseases requiring isolation</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact details -->
+      <section id="contact" class="bg-brand-wash wave-bottom">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+          <div class="bg-white rounded-brand shadow-card p-6 border border-slate-100">
+            <h2 class="text-xl font-semibold text-brand-primary heading-accent">Contact Us</h2>
+            <div class="mt-4 grid md:grid-cols-3 gap-6 text-sm text-slate-700">
+              <div>
+                <div class="font-semibold">Website</div>
+                <a href="https://willgrundymedicalclinic.org" target="_blank" rel="noreferrer" class="text-brand-primary hover:underline">willgrundymedicalclinic.org</a>
+              </div>
+              <div>
+                <div class="font-semibold">Email</div>
+                <a href="mailto:respite@wgmedclinic.org" class="text-brand-primary hover:underline">respite@wgmedclinic.org</a>
+              </div>
+              <div>
+                <div class="font-semibold">Phone</div>
+                <ul class="mt-1 space-y-1">
+                  <li><a href="tel:+18156418902" class="text-brand-primary hover:underline">(815) 641‑8902</a></li>
+                  <li><a href="tel:+13123882429" class="text-brand-primary hover:underline">(312) 388‑2429</a></li>
+                  <li><a href="tel:+18156416161" class="text-brand-primary hover:underline">(815) 641‑6161</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="mt-4 text-xs text-slate-600">Visit us: 213 E. Cass Street, Joliet, IL 60432</div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="border-t border-slate-200">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 text-sm text-slate-600">© <script>document.write(new Date().getFullYear())</script> Will-Grundy Medical Clinic</div>
+    </footer>
+  </body>
+  <script>
+    (function(){
+      const dict = {
+        en: { navPrograms:'Programs', navLocations:'Locations', ctaCall:'Call (815) 726-3377', heroTitle:'Housing, Healthcare, and Hope (HHH)', heroDesc:'A demonstration program that bridges healthcare and housing for people experiencing homelessness or housing insecurity.', callHelp:'Call for Help', readMore:'Read more at WGMC', howGetCare:'How to Get Care' },
+        es: { navPrograms:'Programas', navLocations:'Ubicaciones', ctaCall:'Llamar (815) 726-3377', heroTitle:'Vivienda, Salud y Esperanza (HHH)', heroDesc:'Un programa de demostración que une la salud y la vivienda para personas sin hogar o con inseguridad de vivienda.', callHelp:'Llamar para ayuda', readMore:'Leer más en WGMC', howGetCare:'Cómo recibir atención' }
+      };
+      const params = new URLSearchParams(location.search);
+      let lang = (params.get('lang') || localStorage.getItem('wgmc_lang') || navigator.language || 'en').slice(0,2).toLowerCase();
+      lang = lang === 'es' ? 'es' : 'en';
+      function setLang(next){ lang = next; document.documentElement.lang = lang; localStorage.setItem('wgmc_lang', lang); const url = new URL(location.href); url.searchParams.set('lang', lang); history.replaceState({}, '', url); apply(); }
+      function apply(){
+        document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.getAttribute('data-i18n'); if (dict[lang][k]) el.textContent = dict[lang][k]; });
+        const t = document.getElementById('langToggle'); if (t) t.textContent = lang === 'en' ? 'ES' : 'EN';
+        document.querySelectorAll('[data-index-link]').forEach(a=>{ const hash = a.getAttribute('data-index-link')||''; a.href = 'index.html?lang='+lang+(hash||''); });
+      }
+      document.getElementById('langToggle')?.addEventListener('click', ()=> setLang(lang === 'en' ? 'es' : 'en'));
+      setLang(lang);
+    })();
+  </script>
+  </html>
