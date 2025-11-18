@@ -32,7 +32,12 @@
           <a data-index-link="#locations" class="hover:text-brand-primary" href="index.html#locations" data-i18n="navLocations">Locations</a>
         </nav>
         <div class="flex items-center gap-2">
-          <button id="langToggle" class="btn btn-outline rounded-full" aria-label="Toggle language">ES</button>
+          <select id="langSelect" class="lang-select" aria-label="Change language">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="pl">Polski</option>
+            <option value="ar">العربية</option>
+          </select>
           <a href="tel:+18157263377" class="btn btn-primary" data-i18n="ctaCall"><span>📞</span> Call (815) 726-3377</a>
         </div>
       </div>
@@ -139,15 +144,130 @@ Saturday Clinics (Twice Monthly): 9:00 a.m. – 2:00 p.m. (By appointment only)<
   <script>
     (function(){
       const dict = {
-        en: { navGetCare:'Get Care', navPrograms:'Programs', navLocations:'Locations', ctaCall:'Call (815) 726-3377', heroTitle:'Patient Information', heroDesc:'Everything you need to know to get free care at Will‑Grundy Medical Clinic.', callWGMC:'Call WGMC', findLocation:'Find Location', eligibility:'Eligibility', whatToBring:'What to Bring', bring1:'Photo ID (if you have one)', bring2:'Any medications you are currently taking', bring3:'Any relevant medical records or notes', yourVisit:'Your Visit', aftercare:'Aftercare', hoursContact:'Hours & Contact', phone:'Phone', hours:'Hours', callNow:'📞 Call Now', openInMaps:'🗺️ Open in Maps' },
-        es: { navGetCare:'Obtenga Atención', navPrograms:'Programas', navLocations:'Ubicaciones', ctaCall:'Llamar (815) 726-3377', heroTitle:'Información para Pacientes', heroDesc:'Todo lo que necesita para recibir atención gratuita en la Clínica Will‑Grundy.', callWGMC:'Llamar a WGMC', findLocation:'Buscar ubicación', eligibility:'Elegibilidad', whatToBring:'Qué traer', bring1:'Identificación con foto (si tiene)', bring2:'Cualquier medicamento que esté tomando', bring3:'Registros o notas médicas relevantes', yourVisit:'Su visita', aftercare:'Cuidado posterior', hoursContact:'Horario y contacto', phone:'Teléfono', hours:'Horario', callNow:'📞 Llamar ahora', openInMaps:'🗺️ Abrir en Mapas' }
+        en: {
+          navGetCare: 'Get Care',
+          navPrograms: 'Programs',
+          navLocations: 'Locations',
+          ctaCall: 'Call (815) 726-3377',
+          heroTitle: 'Patient Information',
+          heroDesc: 'Everything you need to know to get free care at Will‑Grundy Medical Clinic.',
+          callWGMC: 'Call WGMC',
+          findLocation: 'Find Location',
+          eligibility: 'Eligibility',
+          whatToBring: 'What to Bring',
+          bring1: 'Photo ID (if you have one)',
+          bring2: 'Any medications you are currently taking',
+          bring3: 'Any relevant medical records or notes',
+          yourVisit: 'Your Visit',
+          aftercare: 'Aftercare',
+          hoursContact: 'Hours & Contact',
+          phone: 'Phone',
+          hours: 'Hours',
+          callNow: '📞 Call Now',
+          openInMaps: '🗺️ Open in Maps'
+        },
+        es: {
+          navGetCare: 'Obtenga Atención',
+          navPrograms: 'Programas',
+          navLocations: 'Ubicaciones',
+          ctaCall: 'Llamar (815) 726-3377',
+          heroTitle: 'Información para Pacientes',
+          heroDesc: 'Todo lo que necesita para recibir atención gratuita en la Clínica Will‑Grundy.',
+          callWGMC: 'Llamar a WGMC',
+          findLocation: 'Buscar ubicación',
+          eligibility: 'Elegibilidad',
+          whatToBring: 'Qué traer',
+          bring1: 'Identificación con foto (si tiene)',
+          bring2: 'Cualquier medicamento que esté tomando',
+          bring3: 'Registros o notas médicas relevantes',
+          yourVisit: 'Su visita',
+          aftercare: 'Cuidado posterior',
+          hoursContact: 'Horario y contacto',
+          phone: 'Teléfono',
+          hours: 'Horario',
+          callNow: '📞 Llamar ahora',
+          openInMaps: '🗺️ Abrir en Mapas'
+        },
+        pl: {
+          navGetCare: 'Uzyskaj opiekę',
+          navPrograms: 'Programy',
+          navLocations: 'Lokalizacje',
+          ctaCall: 'Zadzwoń (815) 726-3377',
+          heroTitle: 'Informacje dla pacjentów',
+          heroDesc: 'Wszystko, co musisz wiedzieć, aby otrzymać bezpłatną opiekę w Will‑Grundy Medical Clinic.',
+          callWGMC: 'Zadzwoń do WGMC',
+          findLocation: 'Znajdź lokalizację',
+          eligibility: 'Kwalifikowalność',
+          whatToBring: 'Co zabrać',
+          bring1: 'Dowód tożsamości ze zdjęciem (jeśli posiadasz)',
+          bring2: 'Wszystkie leki, które obecnie przyjmujesz',
+          bring3: 'Wszelkie istotne dokumenty medyczne lub notatki',
+          yourVisit: 'Twoja wizyta',
+          aftercare: 'Opieka po wizycie',
+          hoursContact: 'Godziny i kontakt',
+          phone: 'Telefon',
+          hours: 'Godziny',
+          callNow: '📞 Zadzwoń teraz',
+          openInMaps: '🗺️ Otwórz w Mapach'
+        },
+        ar: {
+          navGetCare: 'الحصول على الرعاية',
+          navPrograms: 'البرامج',
+          navLocations: 'المواقع',
+          ctaCall: 'اتصل على ‎(815) 726-3377‎',
+          heroTitle: 'معلومات المرضى',
+          heroDesc: 'كل ما تحتاج معرفته للحصول على رعاية مجانية في عيادة ويل‑غرندي الطبية.',
+          callWGMC: 'اتصل بـ WGMC',
+          findLocation: 'البحث عن موقع',
+          eligibility: 'الأهلية',
+          whatToBring: 'ماذا أحضر؟',
+          bring1: 'بطاقة هوية مع صورة (إن وجدت)',
+          bring2: 'أي أدوية تتناولها حاليًا',
+          bring3: 'أي سجلات أو ملاحظات طبية ذات صلة',
+          yourVisit: 'زيارتك',
+          aftercare: 'الرعاية بعد الزيارة',
+          hoursContact: 'ساعات العمل وبيانات الاتصال',
+          phone: 'الهاتف',
+          hours: 'ساعات العمل',
+          callNow: '📞 اتصل الآن',
+          openInMaps: '🗺️ افتح في الخرائط'
+        }
       };
       const params = new URLSearchParams(location.search);
-      let lang = (params.get('lang') || localStorage.getItem('wgmc_lang') || navigator.language || 'en').slice(0,2).toLowerCase(); lang = lang==='es'?'es':'en';
-      function setLang(next){ lang=next; document.documentElement.lang=lang; localStorage.setItem('wgmc_lang', lang); const url=new URL(location.href); url.searchParams.set('lang', lang); history.replaceState({},'',url); apply(); }
-      function apply(){ document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.getAttribute('data-i18n'); if (dict[lang][k]) el.textContent = dict[lang][k]; }); const t=document.getElementById('langToggle'); if (t) t.textContent = lang==='en'?'ES':'EN'; document.querySelectorAll('[data-index-link]').forEach(a=>{ const hash=a.getAttribute('data-index-link')||''; a.href='index.html?lang='+lang+(hash||''); }); }
-      document.getElementById('langToggle')?.addEventListener('click', ()=> setLang(lang==='en'?'es':'en'));
-      setLang(lang);
+      const supported = ['en', 'es', 'pl', 'ar'];
+      let raw = (params.get('lang') || localStorage.getItem('wgmc_lang') || navigator.language || 'en')
+        .toString()
+        .slice(0, 2)
+        .toLowerCase();
+      if (!supported.includes(raw)) raw = 'en';
+      let lang = raw;
+      function apply(){
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        localStorage.setItem('wgmc_lang', lang);
+        const url = new URL(location.href);
+        url.searchParams.set('lang', lang);
+        history.replaceState({}, '', url);
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const k = el.getAttribute('data-i18n');
+          const v = (dict[lang] && dict[lang][k]) || (dict.en && dict.en[k]);
+          if (v) el.textContent = v;
+        });
+        document.querySelectorAll('[data-index-link]').forEach(a => {
+          const hash = a.getAttribute('data-index-link') || '';
+          a.href = 'index.html?lang=' + lang + (hash || '');
+        });
+        const select = document.getElementById('langSelect');
+        if (select) select.value = lang;
+      }
+      function setLang(next){
+        if (!supported.includes(next)) next = 'en';
+        lang = next;
+        apply();
+      }
+      document.getElementById('langSelect')?.addEventListener('change', (e) => setLang(e.target.value));
+      apply();
     })();
   </script>
+  <script src="chatbot.js"></script>
   </html>
