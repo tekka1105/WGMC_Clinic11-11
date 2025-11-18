@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WGMC — Patient Information</title>
+    <meta name="theme-color" content="#319FCA" />
+    <meta name="description" content="How to get free care at Will‑Grundy Medical Clinic: eligibility, what to bring, your visit, and aftercare." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
+    <script>
+      tailwind = window.tailwind || {};
+      tailwind.config = { theme: { extend: { colors: { brand: { primary: 'var(--brand-primary)', secondary: 'var(--brand-secondary)', black: 'var(--brand-black)', white: 'var(--brand-white)' }, text: 'var(--text-color)', muted: 'var(--muted-bg)' }, borderRadius: { brand: 'var(--radius)' }, boxShadow: { card: 'var(--shadow)' } } } };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .hero { background-image: linear-gradient(135deg, #ffffffee, rgba(var(--brand-secondary-rgb), 0.40)), url('images/5B2CF5DE-9BD5-420E-B7EB-695F1D55A4AF-scaled-2.jpeg'); background-size: cover; background-position: center; }
+    </style>
+  </head>
+  <body class="bg-white text-text font-sans">
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <a data-index-link="#home" href="index.html" class="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 ring-brand-secondary rounded-md">
+          <img src="images/WGMC-Logo-Alternate-1-website.jpg" alt="WGMC logo" class="h-8 w-auto" />
+          <span class="font-semibold text-brand-primary">WGMC</span>
+        </a>
+        <nav class="hidden sm:flex items-center gap-4 text-sm font-semibold">
+          <a data-index-link="#get-care" class="hover:text-brand-primary" href="index.html#get-care" data-i18n="navGetCare">Get Care</a>
+          <a data-index-link="#programs" class="hover:text-brand-primary" href="index.html#programs" data-i18n="navPrograms">Programs</a>
+          <a data-index-link="#locations" class="hover:text-brand-primary" href="index.html#locations" data-i18n="navLocations">Locations</a>
+        </nav>
+        <div class="flex items-center gap-2">
+          <select id="langSelect" class="lang-select" aria-label="Change language">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="pl">Polski</option>
+            <option value="ar">العربية</option>
+          </select>
+          <a href="tel:+18157263377" class="btn btn-primary" data-i18n="ctaCall"><span>📞</span> Call (815) 726-3377</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+          <h1 class="text-3xl sm:text-4xl font-bold text-brand-primary heading-accent" data-i18n="heroTitle">Patient Information</h1>
+          <p class="mt-3 text-lg text-slate-700 max-w-2xl" data-i18n="heroDesc">Everything you need to know to get free care at Will‑Grundy Medical Clinic.</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="tel:+18157263377" class="btn btn-primary" data-i18n="callWGMC">Call WGMC</a>
+            <a data-index-link="#locations" href="index.html#locations" class="btn btn-outline" data-i18n="findLocation">Find Location</a>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            <div class="rounded-brand overflow-hidden shadow-card border border-slate-100 bg-white">
+              <img src="images/1E325562-7F25-48EA-9204-458F7F837568_1_201_a-scaled.jpeg" alt="WGMC community" loading="lazy" class="h-28 w-full object-cover" />
+            </div>
+            <div class="rounded-brand overflow-hidden shadow-card border border-slate-100 bg-white">
+              <img src="images/9D7366CA-9E18-4867-B3B8-4C4EB12CBFE8_1_201_a-1024x683.jpeg" alt="Outreach and care" loading="lazy" class="h-28 w-full object-cover" />
+            </div>
+            <div class="rounded-brand overflow-hidden shadow-card border border-slate-100 bg-white">
+              <img src="images/56BF34F3-FE6F-4A91-9D9A-95FD834DE187_1_201_a-1024x692.jpeg" alt="Clinic team" loading="lazy" class="h-28 w-full object-cover" />
+            </div>
+            <div class="rounded-brand overflow-hidden shadow-card border border-slate-100 bg-white">
+              <img src="images/WGMC-seeing-Patients.png" alt="Providers seeing patients" loading="lazy" class="h-28 w-full object-cover" />
+            </div>
+            <div class="rounded-brand overflow-hidden shadow-card border border-slate-100 bg-white hidden md:block">
+              <img src="images/WGMC-In-Community.png" alt="WGMC in community" loading="lazy" class="h-28 w-full object-cover" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 grid md:grid-cols-2 gap-6">
+          <div class="rounded-brand bg-white shadow-card p-0 border border-slate-100 overflow-hidden">
+            <img src="images/WGMC-In-Community.png" alt="WGMC community support" loading="lazy" class="w-full h-32 object-cover" />
+            <div class="p-6">
+            <h2 class="text-xl font-semibold text-brand-primary heading-accent" data-i18n="eligibility">Eligibility</h2>
+            <p class="mt-3 text-slate-700">WGMC serves adults in Will & Grundy Counties who are uninsured or underinsured. If you are unsure whether you qualify, please call us — we’ll help.</p>
+            </div>
+          </div>
+          <div class="rounded-brand bg-white shadow-card p-0 border border-slate-100 overflow-hidden">
+            <img src="images/1E325562-7F25-48EA-9204-458F7F837568_1_201_a-scaled.jpeg" alt="Friendly staff" loading="lazy" class="w-full h-32 object-cover" />
+            <div class="p-6">
+            <h2 class="text-xl font-semibold text-brand-primary heading-accent" data-i18n="whatToBring">What to Bring</h2>
+            <ul class="mt-3 space-y-2 text-slate-700 list-disc list-inside">
+              <li data-i18n="bring1">Photo ID (if you have one)</li>
+              <li data-i18n="bring2">Any medications you are currently taking</li>
+              <li data-i18n="bring3">Any relevant medical records or notes</li>
+            </ul>
+            </div>
+          </div>
+          <div class="rounded-brand bg-white shadow-card p-0 border border-slate-100 overflow-hidden">
+            <img src="images/56BF34F3-FE6F-4A91-9D9A-95FD834DE187_1_201_a-1024x692.jpeg" alt="Welcoming visit" loading="lazy" class="w-full h-32 object-cover" />
+            <div class="p-6">
+            <h2 class="text-xl font-semibold text-brand-primary heading-accent" data-i18n="yourVisit">Your Visit</h2>
+            <p class="mt-3 text-slate-700">Our friendly team will guide you through check‑in and your appointment. Interpreters are available. There is no cost for care; donations are welcome but never required.</p>
+            </div>
+          </div>
+          <div class="rounded-brand bg-white shadow-card p-0 border border-slate-100 overflow-hidden">
+            <img src="images/WGMC-seeing-Patients.png" alt="Aftercare support" loading="lazy" class="w-full h-32 object-cover" />
+            <div class="p-6">
+            <h2 class="text-xl font-semibold text-brand-primary heading-accent" data-i18n="aftercare">Aftercare</h2>
+            <p class="mt-3 text-slate-700">We help with follow‑ups, referrals, and access to medications whenever possible. Call us if you have questions after your visit.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-brand-wash">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 grid md:grid-cols-2 gap-6 items-stretch">
+          <div class="rounded-brand bg-white shadow-card p-6 border border-slate-100">
+            <h2 class="text-xl font-semibold text-brand-primary heading-accent" data-i18n="hoursContact">Hours & Contact</h2>
+            <p class="mt-3 text-slate-700"><strong>Address:</strong> 213 East Cass Street, Joliet, IL 60432</p>
+            <p class="mt-2 text-slate-700"><strong data-i18n="phone">Phone</strong>: (815) 726‑3377</p>
+            <div class="mt-3 text-slate-700">
+              <strong data-i18n="hours">Hours</strong>:
+              <pre class="whitespace-pre-wrap font-sans text-sm mt-1">Monday–Thursday: 9:00 a.m. – 5:00 p.m.
+Saturday Clinics (Twice Monthly): 9:00 a.m. – 2:00 p.m. (By appointment only)</pre>
+            </div>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <a href="tel:+18157263377" class="btn btn-primary" data-i18n="callNow">📞 Call Now</a>
+              <a href="https://maps.google.com/?q=213+E+Cass+St,+Joliet,+IL+60432" target="_blank" rel="noreferrer" class="btn btn-light" data-i18n="openInMaps">🗺️ Open in Maps</a>
+            </div>
+          </div>
+          <div class="rounded-brand overflow-hidden shadow-card border border-slate-100 h-80">
+            <iframe title="WGMC Map" width="100%" height="100%" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=213%20East%20Cass%20Street,%20Joliet,%20IL%2060432&z=15&output=embed"></iframe>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-slate-200">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 text-sm text-slate-600">© <script>document.write(new Date().getFullYear())</script> Will‑Grundy Medical Clinic</div>
+    </footer>
+  </body>
+  <script>
+    (function(){
+      const dict = {
+        en: {
+          navGetCare: 'Get Care',
+          navPrograms: 'Programs',
+          navLocations: 'Locations',
+          ctaCall: 'Call (815) 726-3377',
+          heroTitle: 'Patient Information',
+          heroDesc: 'Everything you need to know to get free care at Will‑Grundy Medical Clinic.',
+          callWGMC: 'Call WGMC',
+          findLocation: 'Find Location',
+          eligibility: 'Eligibility',
+          whatToBring: 'What to Bring',
+          bring1: 'Photo ID (if you have one)',
+          bring2: 'Any medications you are currently taking',
+          bring3: 'Any relevant medical records or notes',
+          yourVisit: 'Your Visit',
+          aftercare: 'Aftercare',
+          hoursContact: 'Hours & Contact',
+          phone: 'Phone',
+          hours: 'Hours',
+          callNow: '📞 Call Now',
+          openInMaps: '🗺️ Open in Maps'
+        },
+        es: {
+          navGetCare: 'Obtenga Atención',
+          navPrograms: 'Programas',
+          navLocations: 'Ubicaciones',
+          ctaCall: 'Llamar (815) 726-3377',
+          heroTitle: 'Información para Pacientes',
+          heroDesc: 'Todo lo que necesita para recibir atención gratuita en la Clínica Will‑Grundy.',
+          callWGMC: 'Llamar a WGMC',
+          findLocation: 'Buscar ubicación',
+          eligibility: 'Elegibilidad',
+          whatToBring: 'Qué traer',
+          bring1: 'Identificación con foto (si tiene)',
+          bring2: 'Cualquier medicamento que esté tomando',
+          bring3: 'Registros o notas médicas relevantes',
+          yourVisit: 'Su visita',
+          aftercare: 'Cuidado posterior',
+          hoursContact: 'Horario y contacto',
+          phone: 'Teléfono',
+          hours: 'Horario',
+          callNow: '📞 Llamar ahora',
+          openInMaps: '🗺️ Abrir en Mapas'
+        },
+        pl: {
+          navGetCare: 'Uzyskaj opiekę',
+          navPrograms: 'Programy',
+          navLocations: 'Lokalizacje',
+          ctaCall: 'Zadzwoń (815) 726-3377',
+          heroTitle: 'Informacje dla pacjentów',
+          heroDesc: 'Wszystko, co musisz wiedzieć, aby otrzymać bezpłatną opiekę w Will‑Grundy Medical Clinic.',
+          callWGMC: 'Zadzwoń do WGMC',
+          findLocation: 'Znajdź lokalizację',
+          eligibility: 'Kwalifikowalność',
+          whatToBring: 'Co zabrać',
+          bring1: 'Dowód tożsamości ze zdjęciem (jeśli posiadasz)',
+          bring2: 'Wszystkie leki, które obecnie przyjmujesz',
+          bring3: 'Wszelkie istotne dokumenty medyczne lub notatki',
+          yourVisit: 'Twoja wizyta',
+          aftercare: 'Opieka po wizycie',
+          hoursContact: 'Godziny i kontakt',
+          phone: 'Telefon',
+          hours: 'Godziny',
+          callNow: '📞 Zadzwoń teraz',
+          openInMaps: '🗺️ Otwórz w Mapach'
+        },
+        ar: {
+          navGetCare: 'الحصول على الرعاية',
+          navPrograms: 'البرامج',
+          navLocations: 'المواقع',
+          ctaCall: 'اتصل على ‎(815) 726-3377‎',
+          heroTitle: 'معلومات المرضى',
+          heroDesc: 'كل ما تحتاج معرفته للحصول على رعاية مجانية في عيادة ويل‑غرندي الطبية.',
+          callWGMC: 'اتصل بـ WGMC',
+          findLocation: 'البحث عن موقع',
+          eligibility: 'الأهلية',
+          whatToBring: 'ماذا أحضر؟',
+          bring1: 'بطاقة هوية مع صورة (إن وجدت)',
+          bring2: 'أي أدوية تتناولها حاليًا',
+          bring3: 'أي سجلات أو ملاحظات طبية ذات صلة',
+          yourVisit: 'زيارتك',
+          aftercare: 'الرعاية بعد الزيارة',
+          hoursContact: 'ساعات العمل وبيانات الاتصال',
+          phone: 'الهاتف',
+          hours: 'ساعات العمل',
+          callNow: '📞 اتصل الآن',
+          openInMaps: '🗺️ افتح في الخرائط'
+        }
+      };
+      const params = new URLSearchParams(location.search);
+      const supported = ['en', 'es', 'pl', 'ar'];
+      let raw = (params.get('lang') || localStorage.getItem('wgmc_lang') || navigator.language || 'en')
+        .toString()
+        .slice(0, 2)
+        .toLowerCase();
+      if (!supported.includes(raw)) raw = 'en';
+      let lang = raw;
+      function apply(){
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        localStorage.setItem('wgmc_lang', lang);
+        const url = new URL(location.href);
+        url.searchParams.set('lang', lang);
+        history.replaceState({}, '', url);
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const k = el.getAttribute('data-i18n');
+          const v = (dict[lang] && dict[lang][k]) || (dict.en && dict.en[k]);
+          if (v) el.textContent = v;
+        });
+        document.querySelectorAll('[data-index-link]').forEach(a => {
+          const hash = a.getAttribute('data-index-link') || '';
+          a.href = 'index.html?lang=' + lang + (hash || '');
+        });
+        const select = document.getElementById('langSelect');
+        if (select) select.value = lang;
+      }
+      function setLang(next){
+        if (!supported.includes(next)) next = 'en';
+        lang = next;
+        apply();
+      }
+      document.getElementById('langSelect')?.addEventListener('change', (e) => setLang(e.target.value));
+      apply();
+    })();
+  </script>
+  <script src="chatbot.js"></script>
+  </html>

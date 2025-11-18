@@ -1,0 +1,1111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#319FCA" />
+    <title>Will-Grundy Medical Clinic (WGMC)</title>
+    <meta name="description" content="Free, dignified healthcare for Will & Grundy Counties. Learn how to get care at WGMC, view locations & hours, and contact us for help." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Brand tokens and base styles -->
+    <link rel="stylesheet" href="./style.css" />
+
+    <!-- Tailwind config (uses CSS variables for brand colors) -->
+    <script>
+      tailwind = window.tailwind || {};
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                primary: 'var(--brand-primary)',
+                secondary: 'var(--brand-secondary)',
+                black: 'var(--brand-black)',
+                white: 'var(--brand-white)'
+              },
+              text: 'var(--text-color)',
+              muted: 'var(--muted-bg)'
+            },
+            borderRadius: {
+              brand: 'var(--radius)'
+            },
+            boxShadow: {
+              card: 'var(--shadow)'
+            }
+          }
+        }
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- React + Babel (for JSX in this static prototype) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      /* Section waves (simple SVG background) */
+      .wave-top { position: relative; }
+      .wave-top:before { content: ""; position: absolute; inset: -64px 0 auto 0; height: 64px; background: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1440 64%22><path fill=%22%23F5F8F9%22 d=%22M0,32L48,42.7C96,53,192,75,288,80C384,85,480,75,576,58.7C672,43,768,21,864,26.7C960,32,1056,64,1152,64C1248,64,1344,32,1392,16L1440,0L1440,64L1392,64C1344,64,1248,64,1152,64C1056,64,960,64,864,64C768,64,672,64,576,64C480,64,384,64,288,64C192,64,96,64,48,64L0,64Z"/></svg>') no-repeat center/cover; }
+      .wave-bottom { position: relative; }
+      .wave-bottom:after { content: ""; position: absolute; inset: auto 0 -64px 0; height: 64px; background: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1440 64%22><path fill=%22%23F5F8F9%22 d=%22M0,32L48,42.7C96,53,192,75,288,80C384,85,480,75,576,58.7C672,43,768,21,864,26.7C960,32,1056,64,1152,64C1248,64,1344,32,1392,16L1440,0L1440,64L1392,64C1344,64,1248,64,1152,64C1056,64,960,64,864,64C768,64,672,64,576,64C480,64,384,64,288,64C192,64,96,64,48,64L0,64Z"/></svg>') no-repeat center/cover; }
+      /* Reveal animation */
+      .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+      .reveal.revealed { opacity: 1; transform: translateY(0); }
+      /* Glass card */
+      .glass { background: rgba(255,255,255,0.9); backdrop-filter: blur(6px); }
+      /* Hero background image */
+      .hero-bg { background-image: url('images/WGMC-seeing-Patients.png'); background-size: cover; background-position: center; }
+      /* Dropdown animation */
+      .menu-pop { opacity: 0; transform: translateY(-12px) scale(0.95); transition: opacity .2s ease, transform .2s cubic-bezier(.22,.61,.36,1); }
+      .menu-pop.open { opacity: 1; transform: translateY(0) scale(1); }
+      /* Hero parallax helper */
+      .hero-parallax { will-change: background-position; }
+    </style>
+  </head>
+  <body class="bg-white text-text font-sans">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="root"></div>
+
+    <!-- Frontend-only analytics dispatcher (console + buffer) -->
+    <script>
+      (function () {
+        const queue = [];
+        const track = (event, props = {}) => {
+          const payload = {
+            event,
+            ts: Date.now(),
+            lang: new URLSearchParams(location.search).get('lang') || 'en',
+            ...props
+          };
+          queue.push(payload);
+          try {
+            const stored = JSON.parse(localStorage.getItem('wgmcanalytics') || '[]');
+            stored.push(payload);
+            localStorage.setItem('wgmcanalytics', JSON.stringify(stored).slice(-5000));
+          } catch (_) {}
+          if (window.console && console.info) console.info('[analytics]', payload);
+        };
+        window.analytics = { track, queue };
+      })();
+    </script>
+
+    <!-- App -->
+    <script type="text/babel">
+      const { useEffect, useMemo, useRef, useState } = React;
+
+      // Simple reveal-on-scroll hook
+      function useReveal() {
+        const ref = useRef(null);
+        useEffect(() => {
+          const el = ref.current;
+          if (!el) return;
+          const io = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) el.classList.add('revealed');
+            });
+          }, { threshold: 0.2 });
+          io.observe(el);
+          return () => io.disconnect();
+        }, []);
+        return ref;
+      }
+
+      function Reveal({ className = '', children }) {
+        const ref = useReveal();
+        return <div ref={ref} className={(className ? className + ' ' : '') + 'reveal'}>{children}</div>;
+      }
+
+      // Animated counter
+      function Counter({ to = 0, suffix = '' }) {
+        const [val, setVal] = useState(0);
+        const ref = useRef(false);
+        useEffect(() => {
+          let raf; let start;
+          const duration = 1200;
+          const step = (ts) => {
+            if (!start) start = ts;
+            const p = Math.min(1, (ts - start) / duration);
+            setVal(Math.floor(to * (0.5 - Math.cos(Math.PI * p) / 2)));
+            if (p < 1) raf = requestAnimationFrame(step);
+          };
+          raf = requestAnimationFrame(step);
+          return () => cancelAnimationFrame(raf);
+        }, [to]);
+        return <span>{val.toLocaleString()}{suffix}</span>;
+      }
+
+      // i18n dictionary
+      const i18n = {
+        en: {
+          langCode: 'en',
+          siteName: 'Will-Grundy Medical Clinic',
+          needCare: 'Need Care? Call WGMC',
+          callNow: 'Call (815) 726-3377',
+          getCare: 'Get Care',
+          findLocations: 'Find Locations',
+          heroSub: 'Free healthcare for our community. Dignity, safety, and care for all.',
+          tiles: {
+            eligible: 'Am I Eligible?',
+            whatToBring: 'What to Bring',
+            findLocation: 'Find a Location',
+            espanol: 'Español'
+          },
+          volunteer: 'Become a Volunteer',
+          volunteerCta: 'Open Volunteer Worksheet',
+          programs: 'Programs',
+          learnMore: 'Learn More',
+          locations: 'Locations & Hours',
+          hours: 'Hours',
+          openInMaps: 'Open in Maps',
+          phone: 'Phone',
+          addressLabel: 'Address',
+          footerCols: { getCare: 'Get Care', programs: 'Programs', visit: 'Visit Us' },
+          support: 'Support WGMC',
+          donate: 'Donate',
+          donateNow: 'Donate Now',
+          sponsorPatient: 'Sponsor a Patient',
+          generalDonation: 'General Donation',
+          brickByBrick: 'Brick by Brick',
+          mobile: { call: 'Call', directions: 'Directions', share: 'Share' },
+          getCareFlow: 'How to Get Care',
+          planVisitTitle: 'Plan Your Visit',
+          planVisitDesc: 'Request an appointment and learn what to bring for your first visit.',
+          planVisitCta: 'Plan Visit / Make Appointment',
+          referralTitle: 'Partner Referrals',
+          referralDesc: 'Partner organizations can send referrals directly to our care team.',
+          referralCta: 'Make a Referral',
+          volunteerDesc: 'Complete the volunteer worksheet to join clinical and support roles.',
+          eligibility: 'Eligibility',
+          documents: 'Documents',
+          visit: 'Your Visit',
+          aftercare: 'Aftercare',
+          acc: {
+            costs: 'Costs',
+            confidentiality: 'Confidentiality',
+            safety: 'Immigration Safety'
+          },
+          footer: 'Will-Grundy Medical Clinic — Free care for our community.',
+          aboutHeading: 'About WGMC',
+          aboutBlurb: 'WGMC is a free clinic serving uninsured and underinsured adults in Will & Grundy Counties. Volunteer providers offer primary and specialty care, diagnostics, medications, and compassionate support.',
+          forPatients: 'Patient Information',
+          alertText: 'Now welcoming new patients. Saturday clinics twice monthly by appointment.'
+        },
+        es: {
+          langCode: 'es',
+          siteName: 'Clínica Médica Will-Grundy',
+          needCare: '¿Necesita atención? Llame a WGMC',
+          callNow: 'Llamar (815) 726-3377',
+          getCare: 'Obtenga Atención',
+          findLocations: 'Buscar Ubicaciones',
+          heroSub: 'Atención médica gratuita para nuestra comunidad. Dignidad y seguridad para todos.',
+          tiles: {
+            eligible: '¿Soy elegible?',
+            whatToBring: 'Qué traer',
+            findLocation: 'Buscar una ubicación',
+            espanol: 'English'
+          },
+          volunteer: 'Hágase voluntario con WGMC',
+          volunteerCta: 'Abrir hoja de voluntarios',
+          programs: 'Programas',
+          learnMore: 'Más información',
+          locations: 'Ubicaciones y horarios',
+          hours: 'Horario',
+          openInMaps: 'Abrir en Mapas',
+          phone: 'Teléfono',
+          addressLabel: 'Dirección',
+          footerCols: { getCare: 'Obtenga Atención', programs: 'Programas', visit: 'Visítenos' },
+          support: 'Apoye a WGMC',
+          donate: 'Donar',
+          donateNow: 'Donar ahora',
+          sponsorPatient: 'Patrocinar a un paciente',
+          generalDonation: 'Donación general',
+          brickByBrick: 'Ladrillo por ladrillo',
+          mobile: { call: 'Llamar', directions: 'Cómo llegar', share: 'Compartir' },
+          getCareFlow: 'Cómo recibir atención',
+          planVisitTitle: 'Planifique su visita',
+          planVisitDesc: 'Solicite una cita gratuita y vea qué debe traer para su primera visita.',
+          planVisitCta: 'Planear visita / Hacer cita',
+          referralTitle: 'Enviar una referencia',
+          referralDesc: 'Las organizaciones asociadas pueden enviar referencias directamente a nuestro equipo de atención.',
+          referralCta: 'Hacer una referencia',
+          volunteerDesc: 'Complete la hoja de registro de voluntarios para unirse a los equipos clínicos y de apoyo.',
+          eligibility: 'Elegibilidad',
+          documents: 'Documentos',
+          visit: 'Su visita',
+          aftercare: 'Cuidado posterior',
+          acc: {
+            costs: 'Costos',
+            confidentiality: 'Confidencialidad',
+            safety: 'Seguridad de inmigración'
+          },
+          footer: 'Clínica Médica Will-Grundy — Atención gratuita para nuestra comunidad.',
+          aboutHeading: 'Acerca de WGMC',
+          aboutBlurb: 'WGMC es una clínica gratuita que sirve a adultos sin seguro o con seguro insuficiente en los condados de Will y Grundy. Proveedores voluntarios brindan atención primaria y especializada, diagnósticos, medicamentos y apoyo compasivo.',
+          forPatients: 'Información para pacientes',
+          alertText: 'Ahora aceptando nuevos pacientes. Clínicas de sábado dos veces al mes con cita.'
+        },
+        pl: {
+          langCode: 'pl',
+          siteName: 'Przychodnia Medyczna Will-Grundy',
+          needCare: 'Potrzebujesz opieki? Zadzwoń do WGMC',
+          callNow: 'Zadzwoń (815) 726-3377',
+          getCare: 'Uzyskaj opiekę',
+          findLocations: 'Znajdź lokalizacje',
+          heroSub: 'Bezpłatna opieka zdrowotna dla naszej społeczności. Godność, bezpieczeństwo i opieka dla wszystkich.',
+          tiles: {
+            eligible: 'Czy się kwalifikuję?',
+            whatToBring: 'Co zabrać',
+            findLocation: 'Znajdź lokalizację',
+            espanol: 'Español'
+          },
+          volunteer: 'Zostań wolontariuszem w WGMC',
+          volunteerCta: 'Otwórz kartę wolontariusza',
+          programs: 'Programy',
+          learnMore: 'Dowiedz się więcej',
+          locations: 'Lokalizacje i godziny',
+          hours: 'Godziny',
+          openInMaps: 'Otwórz w Mapach',
+          phone: 'Telefon',
+          addressLabel: 'Adres',
+          footerCols: { getCare: 'Uzyskaj opiekę', programs: 'Programy', visit: 'Odwiedź nas' },
+          support: 'Wesprzyj WGMC',
+          donate: 'Przekaż darowiznę',
+          donateNow: 'Przekaż darowiznę teraz',
+          sponsorPatient: 'Sfinansuj pacjenta',
+          generalDonation: 'Darowizna ogólna',
+          brickByBrick: 'Cegiełka po cegiełce',
+          mobile: { call: 'Zadzwoń', directions: 'Wskazówki dojazdu', share: 'Udostępnij' },
+          getCareFlow: 'Jak uzyskać opiekę',
+          planVisitTitle: 'Zaplanuj wizytę',
+          planVisitDesc: 'Umów bezpłatną wizytę i sprawdź, co zabrać na pierwsze spotkanie.',
+          planVisitCta: 'Zaplanuj wizytę / umów termin',
+          referralTitle: 'Zgłoszenia partnerskie',
+          referralDesc: 'Organizacje partnerskie mogą przesyłać zgłoszenia bezpośrednio do naszego zespołu.',
+          referralCta: 'Wyślij zgłoszenie',
+          volunteerDesc: 'Wypełnij kartę zgłoszeniową wolontariusza, aby dołączyć do zespołów klinicznych i wspierających.',
+          eligibility: 'Kwalifikowalność',
+          documents: 'Dokumenty',
+          visit: 'Twoja wizyta',
+          aftercare: 'Opieka po wizycie',
+          acc: {
+            costs: 'Koszty',
+            confidentiality: 'Poufność',
+            safety: 'Bezpieczeństwo imigracyjne'
+          },
+          footer: 'Will-Grundy Medical Clinic — Bezpłatna opieka dla naszej społeczności.',
+          aboutHeading: 'O WGMC',
+          aboutBlurb: 'WGMC to bezpłatna przychodnia dla nieubezpieczonych i niedoubezpieczonych dorosłych w powiatach Will i Grundy. Wolontariusze zapewniają opiekę podstawową i specjalistyczną, diagnostykę, leki oraz życzliwe wsparcie.',
+          forPatients: 'Informacje dla pacjentów',
+          alertText: 'Przyjmujemy nowych pacjentów. Sobotnie kliniki dwa razy w miesiącu po wcześniejszym umówieniu wizyty.'
+        },
+        ar: {
+          langCode: 'ar',
+          siteName: 'عيادة ويل-غرندي الطبية',
+          needCare: 'تحتاج إلى رعاية؟ اتصل بـ WGMC',
+          callNow: 'اتصل على ‎(815) 726-3377‎',
+          getCare: 'الحصول على الرعاية',
+          findLocations: 'البحث عن المواقع',
+          heroSub: 'رعاية صحية مجانية لمجتمعنا. الكرامة والسلامة والرعاية للجميع.',
+          tiles: {
+            eligible: 'هل أنا مؤهل؟',
+            whatToBring: 'ماذا أحضر؟',
+            findLocation: 'البحث عن موقع',
+            espanol: 'Español'
+          },
+          volunteer: 'كن متطوعاً مع WGMC',
+          volunteerCta: 'افتح ورقة المتطوع',
+          programs: 'البرامج',
+          learnMore: 'معرفة المزيد',
+          locations: 'المواقع وساعات العمل',
+          hours: 'ساعات العمل',
+          openInMaps: 'افتح في الخرائط',
+          phone: 'الهاتف',
+          addressLabel: 'العنوان',
+          footerCols: { getCare: 'الحصول على الرعاية', programs: 'البرامج', visit: 'زرنا' },
+          support: 'دعم WGMC',
+          donate: 'التبرع',
+          donateNow: 'تبرع الآن',
+          sponsorPatient: 'رعاية مريض',
+          generalDonation: 'تبرع عام',
+          brickByBrick: 'طوبة تلو الأخرى',
+          mobile: { call: 'اتصل', directions: 'الاتجاهات', share: 'مشاركة' },
+          getCareFlow: 'كيفية الحصول على الرعاية',
+          planVisitTitle: 'خطط لزيارتك',
+          planVisitDesc: 'احجز موعداً مجانياً وتعرّف على ما يجب إحضاره في أول زيارة.',
+          planVisitCta: 'خطط للزيارة / حدّد موعداً',
+          referralTitle: 'إحالات الشركاء',
+          referralDesc: 'يمكن للمنظمات الشريكة إرسال الإحالات مباشرة إلى فريق الرعاية لدينا.',
+          referralCta: 'قدّم إحالة',
+          volunteerDesc: 'أكمل ورقة تسجيل المتطوعين للانضمام إلى الأدوار السريرية والداعمة.',
+          eligibility: 'الأهلية',
+          documents: 'المستندات',
+          visit: 'زيارتك',
+          aftercare: 'الرعاية بعد الزيارة',
+          acc: {
+            costs: 'التكاليف',
+            confidentiality: 'السرية',
+            safety: 'سلامة المهاجرين'
+          },
+          footer: 'عيادة ويل-غرندي الطبية — رعاية مجانية لمجتمعنا.',
+          aboutHeading: 'حول WGMC',
+          aboutBlurb: 'WGMC هي عيادة مجانية تخدم البالغين غير المؤمن عليهم أو من لديهم تأمين غير كافٍ في مقاطعتي ويل وغرندي. يقدم مقدمو خدمات متطوعون رعاية أولية ومتخصصة وتشخيصات وأدوية ودعمًا متعاطفًا.',
+          forPatients: 'معلومات للمرضى',
+          alertText: 'نستقبل الآن مرضى جدد. عيادات السبت مرتان في الشهر حسب الموعد.'
+        }
+      };
+
+      const programTitles = {
+        traditional: {
+          en: 'Health Care Services',
+          es: 'Servicios de Atención Médica',
+          pl: 'Usługi opieki zdrowotnej',
+          ar: 'خدمات الرعاية الصحية'
+        },
+        partnership: {
+          en: 'Community Health Impact',
+          es: 'Impacto Comunitario en la Salud',
+          pl: 'Wpływ zdrowia społeczności',
+          ar: 'أثر الصحة المجتمعية'
+        },
+        hhh: {
+          en: 'Housing, Outreach, Case Management',
+          es: 'Vivienda, Alcance y Gestión de Casos',
+          pl: 'Mieszkalnictwo, dotarcie i zarządzanie sprawami',
+          ar: 'الإسكان والتواصل وإدارة الحالات'
+        },
+        cahpb: {
+          en: 'Community Research Data',
+          es: 'Datos de Investigación Comunitaria',
+          pl: 'Dane z badań społeczności',
+          ar: 'بيانات أبحاث المجتمع'
+        }
+      };
+
+      const programDescriptions = {
+        traditional: {
+          en: 'Free clinic care for uninsured neighbors via volunteer providers and referrals.',
+          es: 'Atención gratuita para vecinos sin seguro a través de proveedores voluntarios y derivaciones.',
+          pl: 'Bezpłatna opieka kliniczna dla nieubezpieczonych mieszkańców dzięki wolontariuszom i sieci skierowań.',
+          ar: 'رعاية عيادية مجانية للجيران غير المؤمن عليهم من خلال مقدمي خدمات متطوعين وشبكة إحالة.'
+        },
+        partnership: {
+          en: 'Holistic care with Will County CHC: wellness/primary, ancillary services, and medications.',
+          es: 'Atención holística con Will County CHC: bienestar/primaria, servicios auxiliares y medicamentos.',
+          pl: 'Holistyczna opieka z Will County CHC: profilaktyka i opieka podstawowa, usługi dodatkowe i leki.',
+          ar: 'رعاية شمولية مع مركز Will County لصحة المجتمع: رعاية وقائية وأولية وخدمات مساندة وأدوية.'
+        },
+        hhh: {
+          en: 'Bridging health and housing with coordination, rental assistance, and respite.',
+          es: 'Puente entre salud y vivienda con coordinación, asistencia de alquiler y respiro médico.',
+          pl: 'Łączenie zdrowia i mieszkalnictwa poprzez koordynację, pomoc w opłacaniu czynszu i miejsca wytchnieniowe.',
+          ar: 'ربط الصحة بالإسكان من خلال التنسيق، ومساعدة الإيجار، والرعاية المؤقتة.'
+        },
+        cahpb: {
+          en: 'Collaborative for research and policy to expand access and equity.',
+          es: 'Colaboración para investigación y política que amplía acceso y equidad.',
+          pl: 'Współpraca badawczo-polityczna na rzecz zwiększenia dostępu i równości.',
+          ar: 'شراكة للبحث والسياسات بهدف توسيع نطاق الوصول وتحقيق العدالة.'
+        }
+      };
+
+      const programCardMeta = {
+        traditional: { href: 'program-health-care-services.html', img: 'images/9D7366CA-9E18-4867-B3B8-4C4EB12CBFE8_1_201_a-1024x683.jpeg', alt: 'Health Care Services clinic support' },
+        partnership: { href: 'program-community-health-impact.html', img: 'images/WGMC Health Partnership Logo_Only Icon.jpg', alt: 'Community Health Impact program' },
+        hhh: { href: 'program-housing-outreach-case-management.html', img: 'images/56BF34F3-FE6F-4A91-9D9A-95FD834DE187_1_201_a-1024x692.jpeg', alt: 'Housing, Outreach, Case Management efforts' },
+        cahpb: { href: 'program-community-research-data.html', img: 'images/Slide2-4-768x994.png', alt: 'Community Research Data insights' }
+      };
+
+      function useLang() {
+        const params = new URLSearchParams(location.search);
+        const raw = (params.get('lang') || localStorage.getItem('wgmc_lang') || navigator.language || 'en')
+          .toString()
+          .slice(0, 2)
+          .toLowerCase();
+        const supported = ['en', 'es', 'pl', 'ar'];
+        const initial = supported.includes(raw) ? raw : 'en';
+        const [lang, setLang] = useState(initial);
+        useEffect(() => {
+          document.documentElement.lang = lang;
+          document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+          localStorage.setItem('wgmc_lang', lang);
+          const url = new URL(location.href);
+          url.searchParams.set('lang', lang);
+          window.history.replaceState({}, '', url);
+          window.dispatchEvent(new CustomEvent('wgmc:language-change', { detail: { lang } }));
+        }, [lang]);
+        return [lang, setLang];
+      }
+
+      const Logo = () => (
+        <div className="flex items-center gap-3" aria-label="WGMC logo">
+          <img
+            src="images/WGMC-Logo-Alternate-1-website.jpg"
+            alt="WGMC logo"
+            className="h-8 w-auto"
+          />
+          <span className="font-semibold text-brand-primary hidden sm:inline">WGMC</span>
+        </div>
+      );
+
+      function Header({ t, lang, onToggleLang }) {
+        const [open, setOpen] = useState(false);
+        const [progOpen, setProgOpen] = useState(false);
+        const [mobileProgOpen, setMobileProgOpen] = useState(false);
+        const progRef = useRef(null);
+        const progBtnRef = useRef(null);
+        const progItemsRef = useRef([]);
+        const hoverTimer = useRef(null);
+        useEffect(() => {
+          const onDocClick = (e) => {
+            if (progRef.current && !progRef.current.contains(e.target)) setProgOpen(false);
+          };
+          const onEsc = (e) => {
+            if (e.key === 'Escape') { setProgOpen(false); progBtnRef.current && progBtnRef.current.focus(); }
+          };
+          document.addEventListener('click', onDocClick);
+          document.addEventListener('keydown', onEsc);
+          return () => { document.removeEventListener('click', onDocClick); document.removeEventListener('keydown', onEsc); };
+        }, []);
+        const openProg = (focusFirst = false) => {
+          setProgOpen(true);
+          if (focusFirst) setTimeout(() => { progItemsRef.current[0]?.focus(); }, 0);
+        };
+        const closeProg = () => setProgOpen(false);
+        const onProgKeyDown = (e) => {
+          const items = progItemsRef.current.filter(Boolean);
+          const idx = items.indexOf(document.activeElement);
+          if (e.key === 'ArrowDown') { e.preventDefault(); (items[(idx + 1 + items.length) % items.length] || items[0])?.focus(); }
+          if (e.key === 'ArrowUp') { e.preventDefault(); (items[(idx - 1 + items.length) % items.length] || items[items.length - 1])?.focus(); }
+          if (e.key === 'Home') { e.preventDefault(); items[0]?.focus(); }
+          if (e.key === 'End') { e.preventDefault(); items[items.length - 1]?.focus(); }
+        };
+        return (
+          <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
+            <nav className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between" aria-label="Main">
+              <a href="#home" className="focus:outline-none focus-visible:ring-2 ring-brand-secondary rounded-md">
+                <Logo />
+                <span className="sr-only">{t.siteName}</span>
+              </a>
+              <button
+                className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-md border border-slate-300 text-slate-700"
+                aria-label="Open menu"
+                aria-expanded={open}
+                onClick={() => { const next = !open; setOpen(next); window.analytics.track(next ? 'nav_open' : 'nav_close'); }}
+              >☰</button>
+              <div className="hidden md:flex items-center gap-6 text-sm font-semibold">
+                <a href="#get-care" className="hover:text-brand-primary focus-visible:outline-none focus-visible:ring-2 ring-brand-secondary rounded-md">{t.getCare}</a>
+                <div
+                  className="relative"
+                  ref={progRef}
+                  onPointerEnter={() => { clearTimeout(hoverTimer.current); openProg(false); }}
+                  onPointerLeave={() => { hoverTimer.current = setTimeout(() => closeProg(), 120); }}
+                >
+                  <button
+                    ref={progBtnRef}
+                    className="inline-flex items-center gap-1 px-2 py-2 rounded-md hover:text-brand-primary focus-visible:outline-none focus-visible:ring-2 ring-brand-secondary"
+                    aria-haspopup="menu"
+                    aria-expanded={progOpen}
+                    aria-controls="programs-menu"
+                    onClick={() => { const n = !progOpen; setProgOpen(n); if (n) { window.analytics.track('nav_open_submenu', { id: 'programs' }); setTimeout(() => progItemsRef.current[0]?.focus(), 0); } }}
+                    onKeyDown={(e) => { if (e.key === 'ArrowDown') { e.preventDefault(); if (!progOpen) openProg(true); else progItemsRef.current[0]?.focus(); } if (e.key === 'ArrowUp') { e.preventDefault(); if (!progOpen) openProg(true); else progItemsRef.current[progItemsRef.current.length - 1]?.focus(); } }}
+                  >
+                    {t.programs} <span aria-hidden>▾</span>
+                  </button>
+                  <div
+                    className={`absolute left-1/2 top-full mt-3 -translate-x-1/2 transform z-20 ${progOpen ? '' : 'pointer-events-none'}`}
+                    style={{ pointerEvents: progOpen ? 'auto' : 'none' }}
+                  >
+                    <div
+                      id="programs-menu"
+                      role="menu"
+                      aria-label="Programs"
+                      className={`menu-pop w-80 rounded-brand bg-white shadow-card border border-slate-200 p-2 ${progOpen ? 'open' : ''}`}
+                      onKeyDown={onProgKeyDown}
+                    >
+                      <a ref={(el) => (progItemsRef.current[0] = el)} role="menuitem" className="block px-3 py-2.5 rounded-md hover:bg-muted focus-visible:outline-none focus-visible:ring-2 ring-brand-secondary" href={`program-health-care-services.html?lang=${lang}`}>{lang === 'en' ? 'Health Care Services' : 'Servicios de Atención Médica'}</a>
+                      <a ref={(el) => (progItemsRef.current[1] = el)} role="menuitem" className="block px-3 py-2.5 rounded-md hover:bg-muted focus-visible:outline-none focus-visible:ring-2 ring-brand-secondary" href={`program-community-health-impact.html?lang=${lang}`}>{lang === 'en' ? 'Community Health Impact' : 'Impacto Comunitario en la Salud'}</a>
+                      <a ref={(el) => (progItemsRef.current[2] = el)} role="menuitem" className="block px-3 py-2.5 rounded-md hover:bg-muted focus-visible:outline-none focus-visible:ring-2 ring-brand-secondary" href={`program-housing-outreach-case-management.html?lang=${lang}`}>{lang === 'en' ? 'Housing, Outreach, Case Management' : 'Vivienda, Alcance y Gestión de Casos'}</a>
+                      <a ref={(el) => (progItemsRef.current[3] = el)} role="menuitem" className="block px-3 py-2.5 rounded-md hover:bg-muted focus-visible:outline-none focus-visible:ring-2 ring-brand-secondary" href={`program-community-research-data.html?lang=${lang}`}>{lang === 'en' ? 'Community Research Data' : 'Datos de Investigación Comunitaria'}</a>
+                    </div>
+                  </div>
+                </div>
+                <a href="#locations" className="hover:text-brand-primary focus-visible:outline-none focus-visible:ring-2 ring-brand-secondary rounded-md">{t.locations}</a>
+              </div>
+              <div className="flex items-center gap-2">
+                <a
+                  href="https://www.paypal.com/donate/?hosted_button_id=QB3XVPDN3EBDJ"
+                  target="_blank" rel="noreferrer"
+                  onClick={() => window.analytics.track('donate_click', { placement: 'header', kind: 'general' })}
+                  className="hidden sm:inline-flex btn btn-secondary"
+                >
+                  {t.donate}
+                </a>
+                <div className="lang-select-wrapper">
+                  <select
+                    className="lang-select"
+                    aria-label="Change language"
+                    value={lang}
+                    onChange={(e) => {
+                      const next = e.target.value;
+                      onToggleLang(next);
+                      window.analytics.track('lang_toggle', { to: next });
+                    }}
+                  >
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="pl">Polski</option>
+                    <option value="ar">العربية</option>
+                  </select>
+                  <span className="lang-select-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" focusable="false">
+                      <path fill="currentColor" d="M7 10l5 5 5-5H7z" />
+                    </svg>
+                  </span>
+                </div>
+                <a
+                  href="tel:+18157263377"
+                  onClick={() => window.analytics.track('click_call')}
+                  className="hidden sm:inline-flex btn btn-primary"
+                >
+                  <span className="mr-2">📞</span> {t.callNow}
+                </a>
+              </div>
+            </nav>
+            {open && (
+              <div className="md:hidden border-t border-slate-200 bg-white">
+                <div className="max-w-6xl mx-auto px-4 py-3 grid gap-2 text-sm font-semibold">
+                  <a onClick={() => setOpen(false)} className="py-2" href="#get-care">{t.getCare}</a>
+                  <button
+                    className="py-3 text-left flex items-center justify-between"
+                    aria-expanded={mobileProgOpen}
+                    aria-controls="mobile-programs"
+                    onClick={() => setMobileProgOpen(v => !v)}
+                  >
+                    <span>{t.programs}</span>
+                    <span aria-hidden>{mobileProgOpen ? '▴' : '▾'}</span>
+                  </button>
+                  {mobileProgOpen && (
+                    <div id="mobile-programs" className="pl-3 grid gap-1 text-slate-700">
+                      <a onClick={() => setOpen(false)} className="py-1" href={`program-health-care-services.html?lang=${lang}` }>{lang === 'en' ? 'Health Care Services' : 'Servicios de Atención Médica'}</a>
+                      <a onClick={() => setOpen(false)} className="py-1" href={`program-community-health-impact.html?lang=${lang}` }>{lang === 'en' ? 'Community Health Impact' : 'Impacto Comunitario en la Salud'}</a>
+                      <a onClick={() => setOpen(false)} className="py-1" href={`program-housing-outreach-case-management.html?lang=${lang}` }>{lang === 'en' ? 'Housing, Outreach, Case Management' : 'Vivienda, Alcance y Gestión de Casos'}</a>
+                      <a onClick={() => setOpen(false)} className="py-1" href={`program-community-research-data.html?lang=${lang}` }>{lang === 'en' ? 'Community Research Data' : 'Datos de Investigación Comunitaria'}</a>
+                    </div>
+                  )}
+                  <a onClick={() => setOpen(false)} className="py-2" href="#locations">{t.locations}</a>
+                  <a onClick={() => { setOpen(false); window.analytics.track('donate_click', { placement: 'mobile_menu', kind: 'general' }); }} className="py-2" href="https://www.paypal.com/donate/?hosted_button_id=QB3XVPDN3EBDJ" target="_blank" rel="noreferrer">{t.donate}</a>
+                </div>
+              </div>
+            )}
+          </header>
+        );
+      }
+
+      function AlertBar({ t }) {
+        const [show, setShow] = useState(true);
+        if (!show) return null;
+        return (
+          <div className="bg-brand-secondary text-brand-black">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2 flex flex-col sm:flex-row items-center sm:items-center gap-2 text-sm text-center sm:text-left">
+              <div className="font-semibold leading-tight flex-1 min-w-0 break-words">
+                <span className="inline-block w-full text-balance">{t.alertText}</span>
+              </div>
+              <button
+                onClick={() => { setShow(false); window.analytics.track('alert_dismiss'); }}
+                aria-label="Dismiss"
+                className="rounded-md px-3 py-1 border border-brand-black/20 text-base sm:text-sm"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      function Hero({ t }) {
+        const ref = useRef(null);
+        useEffect(() => {
+          const io = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                window.analytics.track('view_hero');
+              }
+            });
+          }, { threshold: 0.6 });
+          if (ref.current) io.observe(ref.current);
+          return () => io.disconnect();
+        }, []);
+        useEffect(() => {
+          const el = ref.current;
+          if (!el) return;
+          const start = el.offsetTop;
+          const overlay = el.querySelector('.hero-overlay');
+          const onScroll = () => {
+            const rect = el.getBoundingClientRect();
+            const raw = (window.scrollY - start);
+            // Progress from 0 (top of hero) to 1 (bottom passed)
+            const progress = Math.min(1, Math.max(0, (0 - rect.top) / (rect.height || 1)));
+            // Ease-in factor so it feels natural at first, stronger later
+            const easeIn = progress * progress; // quadratic ease-in
+            const multiplier = 0.06 + 0.34 * easeIn; // starts subtle, grows
+            const offset = raw * multiplier;
+            el.style.backgroundPosition = `center ${Math.round(-offset)}px`;
+            if (overlay) {
+              // Start slightly lighter and deepen subtly as the user scrolls
+              overlay.style.opacity = String(0.70 + 0.25 * Math.min(1, progress));
+            }
+          };
+          window.addEventListener('scroll', onScroll, { passive: true });
+          onScroll();
+          return () => window.removeEventListener('scroll', onScroll);
+        }, []);
+        return (
+          <section id="home" ref={ref} className="relative overflow-hidden bg-muted wave-bottom hero-parallax" style={{ backgroundImage: `url('images/5B2CF5DE-9BD5-420E-B7EB-695F1D55A4AF-scaled-2.jpeg')`, backgroundSize: 'cover', backgroundPosition: 'center 0px' }}>
+            <div aria-hidden className="hero-overlay absolute inset-0 bg-gradient-to-br from-white/30 via-white/10 to-brand-secondary/10"></div>
+            <div className="absolute -top-8 -right-8 h-40 w-40 rounded-full bg-brand-primary/20 blur-2xl" aria-hidden></div>
+            <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 grid md:grid-cols-2 gap-10 items-center">
+              <Reveal>
+                <h1 className="text-3xl sm:text-4xl font-bold text-brand-primary tracking-tight">
+                  {t.needCare}
+                </h1>
+                <p className="mt-4 text-lg text-slate-700">{t.heroSub}</p>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a
+                    href="tel:+18157263377"
+                    onClick={() => window.analytics.track('click_call')}
+                    className="btn btn-primary pulse"
+                  >
+                    <span className="mr-2">📞</span> {t.callNow}
+                  </a>
+                  <a
+                    href="#get-care"
+                    onClick={() => window.analytics.track('click_get_care')}
+                    className="btn btn-outline"
+                  >
+                    {t.getCare}
+                  </a>
+                  <a
+                    href="#locations"
+                    className="btn btn-neutral"
+                  >
+                    {t.findLocations}
+                  </a>
+                </div>
+                <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="glass rounded-brand shadow-card p-4 text-center">
+                    <div className="text-2xl font-bold text-brand-primary"><Counter to={1200} /></div>
+                    <div className="text-xs text-slate-600">Patients / year</div>
+                  </div>
+                  <div className="glass rounded-brand shadow-card p-4 text-center">
+                    <div className="text-2xl font-bold text-brand-primary"><Counter to={3500} /></div>
+                    <div className="text-xs text-slate-600">Visits / year</div>
+                  </div>
+                  <div className="glass rounded-brand shadow-card p-4 text-center">
+                    <div className="text-2xl font-bold text-brand-primary"><Counter to={35} suffix={'+ '} /></div>
+                    <div className="text-xs text-slate-600">Years Serving</div>
+                  </div>
+                  <div className="glass rounded-brand shadow-card p-4 text-center">
+                    <div className="text-2xl font-bold text-brand-primary"><Counter to={200} /></div>
+                    <div className="text-xs text-slate-600">Volunteer Providers</div>
+                  </div>
+                </div>
+              </Reveal>
+              <Reveal className="hidden md:flex justify-center">
+                <img src="images/WGMC Health Partnership Logo_Only Icon.jpg" loading="lazy" alt="WGMC icon" className="max-w-[9rem] w-full drop-shadow-lg object-contain" />
+              </Reveal>
+            </div>
+          </section>
+        );
+      }
+
+      function Accordion({ title, children, onOpen }) {
+        const [open, setOpen] = useState(false);
+        return (
+          <div className="border border-slate-200 rounded-brand bg-white">
+            <button
+              className="w-full flex items-center justify-between p-4 text-left font-semibold focus-visible:outline-none focus-visible:ring-2 ring-brand-secondary rounded-brand"
+              aria-expanded={open}
+              onClick={() => {
+                const next = !open;
+                setOpen(next);
+                if (next && onOpen) onOpen();
+              }}
+            >
+              <span>{title}</span>
+              <span aria-hidden className="ml-2">{open ? '−' : '+'}</span>
+            </button>
+            {open && <div className="p-4 pt-0 text-slate-700">{children}</div>}
+          </div>
+        );
+      }
+
+      function GetCare({ t }) {
+        const lang = t.langCode || 'en';
+        const patientUrl = `patients.html?lang=${lang}`;
+        const referralUrl = `program-housing-outreach-case-management.html?lang=${lang}#process`;
+        const volunteerWorksheetUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdX4u4lDzLiGlgGowQ53N0wAnrK_RlHxDpqgTbyi_cbiDdU-g/viewform';
+        const actions = [
+          {
+            id: 'plan-visit',
+            title: t.planVisitTitle,
+            description: t.planVisitDesc,
+            cta: t.planVisitCta,
+            href: patientUrl,
+            buttonClass: 'btn-primary'
+          },
+          {
+            id: 'partner-referral',
+            title: t.referralTitle,
+            description: t.referralDesc,
+            cta: t.referralCta,
+            href: referralUrl,
+            buttonClass: 'btn-secondary'
+          },
+          {
+            id: 'volunteer-worksheet',
+            title: t.volunteer,
+            description: t.volunteerDesc,
+            cta: t.volunteerCta,
+            href: volunteerWorksheetUrl,
+            buttonClass: 'btn-light',
+            external: true
+          }
+        ];
+        return (
+          <section id="get-care" className="bg-brand-wash wave-top wave-bottom">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+              <h2 className="text-2xl font-bold text-brand-primary heading-accent">{t.getCareFlow}</h2>
+              <div className="brand-divider mt-4" aria-hidden></div>
+              <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {actions.map((action) => (
+                  <div key={action.id} id={action.id} className="rounded-brand bg-white shadow-card p-5 border border-slate-100 flex flex-col">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg">{action.title}</h3>
+                      <p className="mt-2 text-slate-700 text-sm">{action.description}</p>
+                    </div>
+                    <a
+                      href={action.href}
+                      target={action.external ? '_blank' : undefined}
+                      rel={action.external ? 'noreferrer' : undefined}
+                      onClick={() => window.analytics.track('get_care_action_click', { id: action.id })}
+                      className={`mt-4 btn ${action.buttonClass} justify-center`}
+                    >
+                      {action.cta}
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function Programs({ t, lang }) {
+        const cards = Object.keys(programCardMeta).map((key) => ({
+          key,
+          title: programTitles[key][lang] || programTitles[key].en,
+          description: programDescriptions[key][lang] || programDescriptions[key].en,
+          ...programCardMeta[key]
+        }));
+        return (
+          <section id="programs" className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+            <h2 className="text-2xl font-bold text-brand-primary heading-accent">{t.programs}</h2>
+            <div className="brand-divider mt-4" aria-hidden></div>
+            <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
+              {cards.map((c) => (
+                <Reveal
+                  key={c.key}
+                  className="rounded-brand bg-white shadow-card border border-slate-100 transition hover:-translate-y-1 hover:shadow-lg cursor-pointer overflow-hidden h-full flex flex-col"
+                  onClick={() => { window.analytics.track('open_program_card', { id: c.key, from: 'card' }); location.href = c.href + '?lang=' + lang; }}
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.analytics.track('open_program_card', { id: c.key, from: 'card' }); location.href = c.href + '?lang=' + lang; } }}
+                >
+                  <img src={c.img} alt={c.alt} loading="lazy" className="w-full h-28 object-cover" />
+                  <div className="p-5 flex flex-col gap-3 h-full">
+                    <h3 className="font-semibold text-lg">{c.title}</h3>
+                    <p className="text-slate-700 text-sm flex-1">{c.description}</p>
+                    <a
+                      href={c.href + '?lang=' + lang}
+                      onClick={(e) => { e.stopPropagation(); window.analytics.track('open_program_card', { id: c.key, from: 'button' }); }}
+                      className="mt-auto btn btn-secondary justify-center"
+                    >
+                      {t.learnMore}
+                    </a>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </section>
+        );
+      }
+
+      function Locations({ t, lang }) {
+        const items = [
+          {
+            id: 'clinic',
+            names: {
+              en: 'WGMC Main Clinic',
+              es: 'Clínica principal WGMC',
+              pl: 'Główna klinika WGMC',
+              ar: 'العيادة الرئيسية لـ WGMC'
+            },
+            address: '213 East Cass Street, Joliet, IL 60432',
+            tel: '+18157263377',
+            hours: 'Monday–Thursday: 9:00 a.m. – 5:00 p.m.\nSaturday Clinics (Twice Monthly): 9:00 a.m. – 2:00 p.m. (By appointment only)',
+            map: 'https://maps.google.com/?q=213+E+Cass+St,+Joliet,+IL+60432'
+          }
+        ];
+        return (
+          <section id="locations" className="bg-brand-wash wave-top">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+              <h2 className="text-2xl font-bold text-brand-primary heading-accent">{t.locations}</h2>
+              <div className="brand-divider mt-4" aria-hidden></div>
+              <div className="mt-6 grid md:grid-cols-2 gap-4">
+                {items.map((loc) => (
+                  <div key={loc.id} className="rounded-brand bg-white shadow-card border border-slate-100 overflow-hidden">
+                    <img src="images/1E325562-7F25-48EA-9204-458F7F837568_1_201_a-scaled.jpeg" alt="WGMC clinic and team" loading="lazy" className="w-full h-32 object-cover" />
+                    <div className="p-5">
+                      <h3 className="font-semibold text-lg">{loc.names[lang] || loc.names.en}</h3>
+                    <p className="mt-1 text-slate-700">{loc.address}</p>
+                    <div className="mt-3">
+                      <Accordion title={t.hours} onOpen={() => window.analytics.track('open_hours', { id: loc.id })}>
+                        <pre className="whitespace-pre-wrap font-sans text-sm text-slate-700">{loc.hours}</pre>
+                      </Accordion>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-3">
+                      <a
+                        href={`tel:${loc.tel}`}
+                        onClick={() => window.analytics.track('click_call', { from: 'location_card', id: loc.id })}
+                        className="btn btn-primary"
+                      >
+                        📞 {t.callNow}
+                      </a>
+                      <a
+                        href={loc.map}
+                        target="_blank" rel="noreferrer"
+                        onClick={() => window.analytics.track('open_map', { id: loc.id })}
+                        className="btn btn-outline"
+                      >
+                        🗺️ {t.openInMaps}
+                      </a>
+                    </div>
+                    </div>
+                  </div>
+                ))}
+                <div className="rounded-brand overflow-hidden shadow-card border border-slate-100 h-80">
+                  <iframe title="WGMC Map" width="100%" height="100%" loading="lazy" referrerPolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=213%20East%20Cass%20Street,%20Joliet,%20IL%2060432&z=15&output=embed"></iframe>
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function SupportWGMC({ t, lang }) {
+        const links = [
+          { key: 'sponsor', title: t.sponsorPatient, href: 'https://www.paypal.com/ncp/payment/U2RHP4GV8MDUW' },
+          { key: 'general', title: t.generalDonation, href: 'https://www.paypal.com/donate/?hosted_button_id=QB3XVPDN3EBDJ' },
+          { key: 'brick', title: t.brickByBrick, href: 'https://willgrundymedicalclinic.org/brick-by-brick/' }
+        ];
+        return (
+          <section id="support" className="bg-brand-wash wave-top">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+              <h2 className="text-2xl font-bold text-brand-primary heading-accent">{t.support}</h2>
+              <div className="brand-divider mt-4" aria-hidden></div>
+              <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {links.map((l) => (
+                  <div key={l.key} className="rounded-brand bg-white shadow-card p-6 border border-slate-100 flex flex-col">
+                    <h3 className="font-semibold text-lg">{l.title}</h3>
+                    <p className="mt-2 text-slate-700 text-sm">
+                      {l.key === 'sponsor' &&
+                        ({
+                          en: 'Fund care for a patient directly.',
+                          es: 'Financie la atención de un paciente directamente.',
+                          pl: 'Sfinansuj bezpośrednio opiekę dla pacjenta.',
+                          ar: 'موّل رعاية مريض بشكل مباشر.'
+                        }[lang] || 'Fund care for a patient directly.')}
+                      {l.key === 'general' &&
+                        ({
+                          en: 'Support free care where it is most needed.',
+                          es: 'Apoye la atención gratuita donde más se necesita.',
+                          pl: 'Wesprzyj bezpłatną opiekę tam, gdzie jest najbardziej potrzebna.',
+                          ar: 'ادعم الرعاية المجانية حيث تكون الحاجة أكبر.'
+                        }[lang] || 'Support free care where it is most needed.')}
+                      {l.key === 'brick' &&
+                        ({
+                          en: 'Honor someone with a commemorative brick.',
+                          es: 'Honre a alguien con un ladrillo conmemorativo.',
+                          pl: 'Uczcij kogoś pamiątkową cegiełką.',
+                          ar: 'كرّم شخصًا بطوبة تذكارية.'
+                        }[lang] || 'Honor someone with a commemorative brick.')}
+                    </p>
+                    <a
+                      href={l.href}
+                      target="_blank" rel="noreferrer"
+                      onClick={() => window.analytics.track('donate_click', { placement: 'support_section', kind: l.key })}
+                      className="mt-4 btn btn-primary"
+                    >
+                      {t.donateNow}
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function MobileCTA({ t }) {
+        const share = async () => {
+          try {
+            if (navigator.share) {
+              await navigator.share({ title: 'WGMC', text: 'Free care at WGMC', url: location.href });
+            } else {
+              await navigator.clipboard.writeText(location.href);
+              alert('Link copied');
+            }
+          } catch (_) {}
+        };
+        return (
+          <div className="fixed bottom-4 inset-x-0 px-4 sm:hidden z-40">
+            <div className="max-w-md mx-auto bg-white rounded-full shadow-card border border-slate-200 flex items-center justify-between">
+              <a
+                href="tel:+18157263377"
+                onClick={() => window.analytics.track('click_call', { from: 'mobile_cta' })}
+                className="w-1/3 text-center btn btn-primary rounded-full"
+              >
+                {t.mobile.call}
+              </a>
+              <a
+                href="#locations"
+                className="w-1/3 text-center btn btn-outline rounded-full"
+              >
+                {t.mobile.directions}
+              </a>
+              <button
+                onClick={() => { share(); window.analytics.track('share_click'); }}
+                className="w-1/3 text-center btn btn-neutral rounded-full"
+                aria-label="Share"
+              >
+                {t.mobile.share}
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      function Footer({ t, lang }) {
+        const address = '213 East Cass Street, Joliet, IL 60432';
+        const hours = 'Monday–Thursday: 9:00 a.m. – 5:00 p.m.\nSaturday Clinics (Twice Monthly): 9:00 a.m. – 2:00 p.m. (By appointment only)';
+        const mapUrl = 'https://maps.google.com/?q=213+E+Cass+St,+Joliet,+IL+60432';
+        const programLinks = Object.keys(programCardMeta).map((key) => ({
+          key,
+          href: `${programCardMeta[key].href}?lang=${lang}`,
+          label: programTitles[key][lang] || programTitles[key].en
+        }));
+        return (
+          <footer className="mt-12 bg-brand-secondary text-brand-black" aria-labelledby="footer-heading" role="contentinfo">
+            <div className="h-1 bg-gradient-to-r from-brand-primary to-brand-secondary" aria-hidden></div>
+            <h2 id="footer-heading" className="sr-only">Footer</h2>
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                <div>
+                  <div className="flex items-center gap-3">
+                    <img src="images/WGMC-Logo-Alternate-1-website.jpg" alt="WGMC logo" className="h-10 w-auto" />
+                    <span className="font-semibold">WGMC</span>
+                  </div>
+                  <h3 className="mt-5 font-semibold">{t.aboutHeading}</h3>
+                  <p className="mt-2 text-black/80 text-sm leading-6">{t.aboutBlurb}</p>
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    <a href="tel:+18157263377" onClick={() => window.analytics.track('click_call', { from: 'footer' })} className="btn btn-light">📞 {t.callNow}</a>
+                    <a href={`patients.html?lang=${lang}`} className="btn btn-outline bg-white/10">{t.forPatients}</a>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-semibold">{t.footerCols.getCare}</h3>
+                  <ul className="mt-3 space-y-2 text-sm leading-6 text-black/90">
+                    <li><a className="hover:underline" href="#get-care">{t.getCareFlow}</a></li>
+                    <li><a className="hover:underline" href="#plan-visit">{t.planVisitTitle}</a></li>
+                    <li><a className="hover:underline" href="#partner-referral">{t.referralTitle}</a></li>
+                    <li><a className="hover:underline" href="#volunteer-worksheet">{t.volunteer}</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="font-semibold">{t.footerCols.programs}</h3>
+                  <ul className="mt-3 space-y-2 text-sm leading-6 text-black/90">
+                    {programLinks.map((link) => (
+                      <li key={link.key}><a className="hover:underline" href={link.href}>{link.label}</a></li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="font-semibold">{t.footerCols.visit}</h3>
+                  <ul className="mt-3 space-y-2 text-sm leading-6 text-black/90">
+                    <li><strong>{t.addressLabel}:</strong> {address}</li>
+                    <li><strong>{t.phone}:</strong> (815) 726-3377</li>
+                    <li>
+                      <strong>{t.hours}:</strong>
+                      <pre className="whitespace-pre-wrap font-sans text-sm mt-1">{hours}</pre>
+                    </li>
+                  </ul>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <a href={mapUrl} target="_blank" rel="noreferrer" onClick={() => window.analytics.track('open_map', { from: 'footer' })} className="btn btn-light">🗺️ {t.openInMaps}</a>
+                    <a href="https://www.paypal.com/donate/?hosted_button_id=QB3XVPDN3EBDJ" target="_blank" rel="noreferrer" onClick={() => window.analytics && window.analytics.track('donate_click', { placement:'footer', kind:'general' })} className="btn btn-secondary">{t.donate}</a>
+                  </div>
+                  <div className="mt-5 text-sm leading-6">
+                    <div className="font-semibold">{t.support}</div>
+                    <ul className="mt-2 space-y-1">
+                      <li><a className="hover:underline" href="https://www.paypal.com/ncp/payment/U2RHP4GV8MDUW" target="_blank" rel="noreferrer" onClick={() => window.analytics && window.analytics.track('donate_click', { placement:'footer', kind:'sponsor' })}>{t.sponsorPatient}</a></li>
+                      <li><a className="hover:underline" href="https://willgrundymedicalclinic.org/brick-by-brick/" target="_blank" rel="noreferrer" onClick={() => window.analytics && window.analytics.track('donate_click', { placement:'footer', kind:'brick' })}>{t.brickByBrick}</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+                  <div className="mt-10 border-t border-black/10 pt-6 text-xs text-black/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>© {new Date().getFullYear()} Will-Grundy Medical Clinic</div>
+                <div className="space-x-4">
+                  <a className="hover:underline" href="#get-care">{t.getCare}</a>
+                  <a className="hover:underline" href="#programs">{t.programs}</a>
+                  <a className="hover:underline" href="#locations">{t.locations}</a>
+                  <a className="hover:underline" href="#support">{t.support}</a>
+                </div>
+              </div>
+            </div>
+          </footer>
+        );
+      }
+
+      function App() {
+        const [lang, setLang] = useLang();
+        const t = i18n[lang];
+        useEffect(() => {
+          // Track initial page view
+          window.analytics.track('view_app');
+        }, []);
+        return (
+          <div>
+            <AlertBar t={t} />
+            <Header t={t} lang={lang} onToggleLang={setLang} />
+            <main id="main" className="pb-24 sm:pb-0">
+              <Hero t={t} />
+              <Programs t={t} lang={lang} />
+              <GetCare t={t} />
+              <Locations t={t} lang={lang} />
+              <SupportWGMC t={t} lang={lang} />
+            </main>
+            <Footer t={t} lang={lang} />
+            <MobileCTA t={t} />
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+    <script src="chatbot.js"></script>
+  </body>
+  </html>
